@@ -2,7 +2,7 @@ Package: standrecon
 Title: Reconstruct Forest Stand Conditions
 Version: 0.0.0.9000
 Authors@R: 
-    person("Kurt", "Riggin", , "krigscholar.com", role = c("aut", "cre"))
+    person("Kurt", "Riggin", , "krigscholar@gmail.com", role = c("aut", "cre"))
 Description: Function to reconstruct forest stand conditions at a given reference year.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -10,3 +10,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 URL: https://github.com/kriggithub/standrecon
 BugReports: https://github.com/kriggithub/standrecon/issues
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

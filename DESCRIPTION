@@ -1,11 +1,10 @@
 Package: standrecon
-Title: What the Package Does (One Line, Title Case)
+Title: Reconstruct Forest Stand Conditions
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Kurt", "Riggin", , "krigscholar.com", role = c("aut", "cre"))
+Description: Function to reconstruct forest stand conditions at a given reference year.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

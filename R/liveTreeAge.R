@@ -11,7 +11,12 @@
 #' @export
 #'
 #' @examples
-liveTreeAge <- function(data, speciesCol = Species, ageCol = Age, dbhCol = DBH, statusCol = Status, measYear){
+liveTreeAge <- function(data = data,
+                        speciesCol = Species,
+                        ageCol = Age,
+                        dbhCol = DBH,
+                        statusCol = Status,
+                        measYear = measYear){
 
   # Pull out column names as strings
   Species <- deparse(substitute(speciesCol))

@@ -5,12 +5,12 @@
 \title{Predict unknown live tree ages from DBH of known live trees}
 \usage{
 liveTreeAge(
-  data,
+  data = data,
   speciesCol = Species,
   ageCol = Age,
   dbhCol = DBH,
   statusCol = Status,
-  measYear
+  measYear = measYear
 )
 }
 \arguments{

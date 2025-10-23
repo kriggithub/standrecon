@@ -11,7 +11,7 @@ test_that("liveTreeAge() predicts missing ages for live trees", {
   measYear <- 2025
 
   # Run function on dummy data
-  out <- liveTreeAge(df, speciesCol = Species, ageCol = Age, dbhCol = DBH, statusCol = Status, measYear = measYear)
+  out <- liveTreeAge(df, speciesCol = "Species", ageCol = "Age", dbhCol = "DBH", statusCol = "Status", measYear = measYear)
 
   # Expect predicted ages
   expect_equal(out$Age, c(10, 11, 15, 20, 30, 35))
@@ -33,7 +33,7 @@ test_that("liveTreeAge() works only for live trees", {
   measYear <- 2025
 
   # Run function on dummy data
-  out <- liveTreeAge(df, speciesCol = Species, ageCol = Age, dbhCol = DBH, statusCol = Status, measYear = measYear)
+  out <- liveTreeAge(df, speciesCol = "Species", ageCol = "Age", dbhCol = "DBH", statusCol = "Status", measYear = measYear)
 
   # Expect predicted ages
   expect_equal(out$Age, c(10, 11, 15, 20, 30, 35, NA, NA))

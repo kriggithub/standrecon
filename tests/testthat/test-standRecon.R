@@ -1,3 +1,3 @@
-test_that("standRecon() correctly calculates tree density and basal area", {
+test_that("multiplication works", {
   expect_equal(2 * 2, 4)
 })

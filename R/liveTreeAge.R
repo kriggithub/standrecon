@@ -19,10 +19,10 @@ liveTreeAge <- function(data = data,
                         measYear = measYear){
 
   # Pull out column names as strings
-  Species <- deparse(substitute(speciesCol))
-  Age <- deparse(substitute(ageCol))
-  DBH <- deparse(substitute(dbhCol))
-  Status <- deparse(substitute(statusCol))
+  Species <- normCols(speciesCol)
+  Age <- normCols(ageCol)
+  DBH <- normCols(dbhCol)
+  Status <- normCols(statusCol)
 
   # Loop for each unique species in data
   for (sp in unique(data[[Species]])) {
@@ -40,7 +40,10 @@ liveTreeAge <- function(data = data,
       fit <- stats::lm(formula, data = speciesData)
 
       # Grab live trees that have missing age data
-      missingRows <- is.na(data[[Age]]) & data[[Species]] == sp & data[[Status]] == 1
+      missingRows <- which(is.na(data[[Age]]) &
+                             !is.na(data[[Species]]) &
+                             data[[Species]] == sp &
+                             data[[Status]] == 1)
 
       # Fill in missing age data for live trees
       if (any(missingRows)) {
@@ -59,5 +62,3 @@ liveTreeAge <- function(data = data,
   # Return data
   data
 }
-
-

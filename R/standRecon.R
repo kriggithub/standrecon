@@ -1,8 +1,30 @@
+#' Reconstruct stand conditions from a given reference year
+#'
+#' @param data Data with species, age, DBH, tree status, and tree decay columns.
+#' @param measYear Year that data was measured.
+#' @param refYear Reference years to reconstruct stand conditions.
+#' @param avgIncVec Vector of average increment growth per species with units mm/year. (PIEN = 0.5, ABBI = 0.3)
+#' @param plotSize Size of plots in m².
+#' @param nPlots Number of plots with plotSize.
+#' @param barkEqList List of bark correction equations. Default bark corrections for species codes used otherwise. list(PIPO = function(x) x*1.1029 + 0.7162)
+#' @param speciesCol Species column name in data as a string.
+#' @param ageCol Species column name in data as a string.
+#' @param dbhCol DBH column name in data as a string.
+#' @param statusCol Species status column name in data as a string.
+#' @param decayCol Species decay column name in data as a string.
+#' @param percentiles Percentiles to be calculated for sensitivity analysis.
+#' @param minDbh Minimum DBH threshold for stand calculations in cm.
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 standRecon <- function(data = data,
                        measYear,
                        refYear,
                        avgIncVec,
                        plotSize,
+                       nPlots = 1,
                        barkEqList = list(),
                        speciesCol = "Species",
                        ageCol = "Age",
@@ -15,11 +37,11 @@ standRecon <- function(data = data,
   # Step 0: Prefunction helpers/definitions
 
   # (a) Pull out column names as strings
-  Species <- normCols(speciesCol)
-  Age     <- normCols(ageCol)
-  DBH     <- normCols(dbhCol)
-  Status  <- normCols(statusCol)
-  Decay   <- normCols(decayCol)
+  Species <- speciesCol
+  Age     <- ageCol
+  DBH     <- dbhCol
+  Status  <- statusCol
+  Decay   <- decayCol
 
   # (b) create column names for each percent
   percentnames <- paste0("p", percentiles*100)
@@ -40,7 +62,7 @@ standRecon <- function(data = data,
   )
 
   # (d) update bark equation list based on user inputs
-  barkEqList <- modifyList(defaultBarkEq, barkEqList)
+  barkEqList <- utils::modifyList(defaultBarkEq, barkEqList)
 
   # (e) setup final dataframe
   finalOutput <- list()
@@ -72,7 +94,7 @@ standRecon <- function(data = data,
     liveTreeData <- allTreeData[allTreeData[[Status]] == 1, ]
 
     # filter trees alive at reference and make sure they have required columns
-    liveTreeData <- liveTreeData[liveTreeData$estabYear <= rY & complete.cases(liveTreeData[, c(DBH, Status, Species)]), ]
+    liveTreeData <- liveTreeData[liveTreeData$estabYear <= rY & stats::complete.cases(liveTreeData[, c(DBH, Status, Species)]), ]
 
 
     # (c) Subtract annual growth rate per species to find DBH
@@ -269,7 +291,7 @@ standRecon <- function(data = data,
 
 
 
-      # Step 6: Calculate stand density and basal area at reference date and return
+      # Step 6: Calculate stand density and basal area at reference dates and store
 
       # (a) Add reconstructed live and dead tree DBH to one table
 
@@ -277,21 +299,23 @@ standRecon <- function(data = data,
         liveTreeData[, c(Species, "RefDBH")],
         deadTreeData[, c(Species, "RefDBH")]
       )
+      # remove rows that are NA
+      finalTreeData <- finalTreeData[rowSums(is.na(finalTreeData)) != ncol(finalTreeData), ]
 
 
       # (b) Calculate basal area for reference date
       # basal area per tree
-      finalTreeData$BA <- 0.00007854 * (finalTreeData$RefDBH^2)
+      finalTreeData$BA <- (0.00007854 * (finalTreeData$RefDBH^2)) * (10000/(plotSize*nPlots))
       # sum basal area per species
       BAsum <- rowsum(finalTreeData$BA, finalTreeData[[Species]], na.rm = T)
       # create output list of BA
-      BAlist <- setNames(as.list(BAsum[,1]), paste0(rownames(BAsum), ".ba"))
+      BAlist <- stats::setNames(as.list(BAsum[,1]), paste0(rownames(BAsum), ".ba"))
 
       # (c) Calculate stand density for reference date
       # extract number of trees per species
       spCounts <- table(finalTreeData[[Species]])
       # create output list of tree density
-      DensList <- setNames(as.list(as.numeric(spCounts) * (10000/plotSize)),
+      DensList <- stats::setNames(as.list(as.numeric(spCounts) * (10000/(plotSize*nPlots))),
                            paste0(names(spCounts), ".density"))
 
 
@@ -314,8 +338,53 @@ standRecon <- function(data = data,
     }
 
   }
+
+
+  # Step 7: Calculate stand density and basal area at measured date and store
+
+  # (a) Subset live trees from measured data
+  measTreeData <- allTreeData[allTreeData[[Status]] == 1 &
+                                !is.na(allTreeData[[DBH]]),
+                              c(Species, DBH)]
+
+  # (b) Calculate basal area
+  # basal area per tree
+  measTreeData$BA <- (0.00007854 * (measTreeData[[DBH]]^2)) * (10000/(plotSize*nPlots))
+  # sum basal area per species
+  measBAsum <- rowsum(measTreeData$BA, measTreeData[[Species]], na.rm = T)
+  # create output list of BA
+  measBAlist <- stats::setNames(as.list(measBAsum[,1]), paste0(rownames(measBAsum), ".ba"))
+
+  # (c) Calculate stand density for reference date
+  # extract number of trees per species
+  measSpCounts <- table(measTreeData[[Species]])
+  # create output list of tree density
+  measDensList <- stats::setNames(as.list(as.numeric(measSpCounts) * (10000/(plotSize*nPlots))),
+                           paste0(names(measSpCounts), ".density"))
+
+
+  # (d) Return stand density and basal area by species per percentile and reference year
+  # and append to final data
+  measRowOut <- data.frame(
+    refYear = measYear,
+    measBAlist,
+    measDensList,
+    check.names = FALSE
+  )
+
+  # write to final output
+  if (is.null(finalOutput[["measured"]])) {
+    finalOutput[["measured"]] <- measRowOut
+  } else {
+    finalOutput[["measured"]] <- rbind(finalOutput[["measured"]], measRowOut)
+  }
+
+
+  # Step 8: Return data
   return(list(
     finalOutput = finalOutput,
+    finalTreeData = finalTreeData,
+    allTreeData = allTreeData,
     liveTreeData = liveTreeData,
     deadTreeData = deadTreeData
   ))

@@ -1,10 +1,10 @@
 #' Predict unknown live tree ages from DBH of known live trees
 #'
 #' @param data Data with species, age, DBH, and tree status columns.
-#' @param speciesCol Species column in data.
-#' @param ageCol Age column in data.
-#' @param dbhCol DBH column in data.
-#' @param statusCol Tree Status column in data.
+#' @param speciesCol Species column name in data as a string.
+#' @param ageCol Age column name in data as a string.
+#' @param dbhCol DBH column name in data as a string.
+#' @param statusCol Tree Status column name in data as a string.
 #' @param measYear Year that data was measured.
 #'
 #' @returns Data with predicted ages for all live trees.
@@ -12,17 +12,17 @@
 #'
 #' @examples
 liveTreeAge <- function(data = data,
-                        speciesCol = Species,
-                        ageCol = Age,
-                        dbhCol = DBH,
-                        statusCol = Status,
+                        speciesCol = "Species",
+                        ageCol = "Age",
+                        dbhCol = "DBH",
+                        statusCol = "Status",
                         measYear = measYear){
 
   # Pull out column names as strings
-  Species <- normCols(speciesCol)
-  Age <- normCols(ageCol)
-  DBH <- normCols(dbhCol)
-  Status <- normCols(statusCol)
+  Species <- speciesCol
+  Age <- ageCol
+  DBH <- dbhCol
+  Status <- statusCol
 
   # Loop for each unique species in data
   for (sp in unique(data[[Species]])) {

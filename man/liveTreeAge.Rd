@@ -6,23 +6,23 @@
 \usage{
 liveTreeAge(
   data = data,
-  speciesCol = Species,
-  ageCol = Age,
-  dbhCol = DBH,
-  statusCol = Status,
+  speciesCol = "Species",
+  ageCol = "Age",
+  dbhCol = "DBH",
+  statusCol = "Status",
   measYear = measYear
 )
 }
 \arguments{
 \item{data}{Data with species, age, DBH, and tree status columns.}
 
-\item{speciesCol}{Species column in data.}
+\item{speciesCol}{Species column name in data as a string.}
 
-\item{ageCol}{Age column in data.}
+\item{ageCol}{Age column name in data as a string.}
 
-\item{dbhCol}{DBH column in data.}
+\item{dbhCol}{DBH column name in data as a string.}
 
-\item{statusCol}{Tree Status column in data.}
+\item{statusCol}{Tree Status column name in data as a string.}
 
 \item{measYear}{Year that data was measured.}
 }

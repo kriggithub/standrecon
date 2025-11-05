@@ -1,3 +1,12 @@
+#' Creates conclass column using status and decay vectors.
+#'
+#' @param statusVec Vector of tree status values.
+#' @param decayVec Vector of tree decay values.
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 createConclass <- function(statusVec, decayVec){
   ifelse(statusVec == 2 & decayVec %in%  1:2, 3,
   ifelse(statusVec == 2 & decayVec %in%  3:4, 4,

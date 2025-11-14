@@ -1,7 +1,7 @@
 #' Calculates Fule's decomposition rates
 #'
 #' @param rate
-#' @param percentiles
+#' @param percentiles Decay percentiles to be calculated.
 #'
 #' @returns
 #' @export

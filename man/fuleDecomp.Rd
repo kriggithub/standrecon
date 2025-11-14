@@ -7,6 +7,8 @@
 fuleDecomp(rate, percentiles)
 }
 \arguments{
+\item{rate}{Previous decay rate.}
+
 \item{percentiles}{Decay percentiles to be calculated.}
 }
 \description{

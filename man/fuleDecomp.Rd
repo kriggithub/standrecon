@@ -7,7 +7,7 @@
 fuleDecomp(rate, percentiles)
 }
 \arguments{
-\item{percentiles}{}
+\item{percentiles}{Decay percentiles to be calculated.}
 }
 \description{
 Calculates Fule's decomposition rates

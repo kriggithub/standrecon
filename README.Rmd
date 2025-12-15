@@ -13,13 +13,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-# standrecon
+# standrecon: Reconstruct Forest Stand Conditions
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/kriggithub/standrecon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kriggithub/standrecon/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of standrecon is to ...
+The `standrecon` R package was created to summarize reference historical stand conditions by total basal area and tree density using contemporary field data.
+
+standrecon automates the methods described for forest stand reconstruction by Sakulich & Scholl, 2005, using dead tree decomposition rates as per Fule, 1993.
+
+Data sets which use default species codes (such as PIPO or PSME) are able to utilize the default bark correction, which otherwise must be implemented manually. 
+
 
 ## Installation
 
@@ -30,27 +34,4 @@ You can install the development version of standrecon from [GitHub](https://gith
 pak::pak("kriggithub/standrecon")
 ```
 
-## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(standrecon)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.

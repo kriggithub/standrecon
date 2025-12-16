@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/kriggithub/standrecon/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kriggithub/standrecon/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The `standrecon` R package was created to summarize reference historical

@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-standRecon <- function(data = data,
+standrecon <- function(data = data,
                        measYear,
                        refYear,
                        avgIncVec,

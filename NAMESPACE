@@ -3,4 +3,4 @@
 export(createConclass)
 export(fuleDecomp)
 export(liveTreeAge)
-export(standRecon)
+export(standrecon)

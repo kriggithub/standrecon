@@ -1,4 +1,4 @@
-test_that("standrecon() works on standrecon_example_data and returns expected structure", {
+test_that("standrecon() works on standrecon_example_data and returns a data frame", {
 
   data("standrecon_example_data")
 
@@ -11,6 +11,18 @@ test_that("standrecon() works on standrecon_example_data and returns expected st
   )
 
 
-  # returns a list
-  expect_type(out, "list")
+  # returns a data frame
+  expect_s3_class(out, "data.frame")
+
+  # data frame has expected columns
+  expect_true(all(c(
+    "type", "year", "percentile",
+    "species", "basal_area", "stem_density"
+  ) %in% names(out)))
+
+  # data frame contains results
+  expect_true(nrow(out) > 0)
+
+  # data frame should have filled out species
+  expect_false(any(is.na(out$species)))
 })

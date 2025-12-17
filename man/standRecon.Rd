@@ -50,6 +50,10 @@ standrecon(
 
 \item{min_dbh}{Minimum DBH threshold for stand calculations in cm.}
 }
+\value{
+A data frame with one row per species, reference year, and percentile. Columns include output type (reconstructed or measured),
+reference year, percentile, species code, basal area per hectare, and stem density per hectare.
+}
 \description{
 Reconstruct stand conditions from a given reference year
 }
@@ -64,4 +68,5 @@ out <- standrecon(
   plot_size = 400
 )
 
+out
 }

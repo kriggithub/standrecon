@@ -5,50 +5,50 @@
 \title{Reconstruct stand conditions from a given reference year}
 \usage{
 standrecon(
-  data = data,
-  measYear,
-  refYear,
-  avgIncVec,
-  plotSize,
-  nPlots = 1,
-  barkEqList = list(),
-  speciesCol = "Species",
-  ageCol = "Age",
-  dbhCol = "DBH",
-  statusCol = "Status",
-  decayCol = "Decay",
+  data,
+  meas_year,
+  ref_year,
+  avg_inc_vec,
+  plot_size,
+  n_plots = 1,
+  bark_eq_list = list(),
+  species_col = "Species",
+  age_col = "Age",
+  dbh_col = "DBH",
+  status_col = "Status",
+  decay_col = "Decay",
   percentiles = c(0.25, 0.5, 0.75),
-  minDbh = 5
+  min_dbh = 5
 )
 }
 \arguments{
 \item{data}{Data with species, age, DBH, tree status, and tree decay columns.}
 
-\item{measYear}{Year that data was measured.}
+\item{meas_year}{Year that data was measured.}
 
-\item{refYear}{Reference years to reconstruct stand conditions.}
+\item{ref_year}{Reference years to reconstruct stand conditions.}
 
-\item{avgIncVec}{Vector of average increment growth per species with units mm/year. (PIEN = 0.5, ABBI = 0.3)}
+\item{avg_inc_vec}{Vector of average increment growth per species with units mm/year. (PIEN = 0.5, ABBI = 0.3)}
 
-\item{plotSize}{Size of plots in m².}
+\item{plot_size}{Size of plots in m².}
 
-\item{nPlots}{Number of plots with plotSize.}
+\item{n_plots}{Number of plots with plot_size.}
 
-\item{barkEqList}{List of bark correction equations. Default bark corrections for species codes used otherwise. list(PIPO = function(x) x*1.1029 + 0.7162)}
+\item{bark_eq_list}{List of bark correction equations. Default bark corrections for species codes used otherwise. list(PIPO = function(x) x*1.1029 + 0.7162)}
 
-\item{speciesCol}{Species column name in data as a string.}
+\item{species_col}{Species column name in data as a string.}
 
-\item{ageCol}{Species column name in data as a string.}
+\item{age_col}{Species column name in data as a string.}
 
-\item{dbhCol}{DBH column name in data as a string.}
+\item{dbh_col}{DBH column name in data as a string.}
 
-\item{statusCol}{Species status column name in data as a string.}
+\item{status_col}{Species status column name in data as a string.}
 
-\item{decayCol}{Species decay column name in data as a string.}
+\item{decay_col}{Species decay column name in data as a string.}
 
 \item{percentiles}{Percentiles to be calculated for sensitivity analysis.}
 
-\item{minDbh}{Minimum DBH threshold for stand calculations in cm.}
+\item{min_dbh}{Minimum DBH threshold for stand calculations in cm.}
 }
 \description{
 Reconstruct stand conditions from a given reference year

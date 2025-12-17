@@ -1,47 +1,47 @@
 #' Reconstruct stand conditions from a given reference year
 #'
 #' @param data Data with species, age, DBH, tree status, and tree decay columns.
-#' @param measYear Year that data was measured.
-#' @param refYear Reference years to reconstruct stand conditions.
-#' @param avgIncVec Vector of average increment growth per species with units mm/year. (PIEN = 0.5, ABBI = 0.3)
-#' @param plotSize Size of plots in m².
-#' @param nPlots Number of plots with plotSize.
-#' @param barkEqList List of bark correction equations. Default bark corrections for species codes used otherwise. list(PIPO = function(x) x*1.1029 + 0.7162)
-#' @param speciesCol Species column name in data as a string.
-#' @param ageCol Species column name in data as a string.
-#' @param dbhCol DBH column name in data as a string.
-#' @param statusCol Species status column name in data as a string.
-#' @param decayCol Species decay column name in data as a string.
+#' @param meas_year Year that data was measured.
+#' @param ref_year Reference years to reconstruct stand conditions.
+#' @param avg_inc_vec Vector of average increment growth per species with units mm/year. (PIEN = 0.5, ABBI = 0.3)
+#' @param plot_size Size of plots in m².
+#' @param n_plots Number of plots with plot_size.
+#' @param bark_eq_list List of bark correction equations. Default bark corrections for species codes used otherwise. list(PIPO = function(x) x*1.1029 + 0.7162)
+#' @param species_col Species column name in data as a string.
+#' @param age_col Species column name in data as a string.
+#' @param dbh_col DBH column name in data as a string.
+#' @param status_col Species status column name in data as a string.
+#' @param decay_col Species decay column name in data as a string.
 #' @param percentiles Percentiles to be calculated for sensitivity analysis.
-#' @param minDbh Minimum DBH threshold for stand calculations in cm.
+#' @param min_dbh Minimum DBH threshold for stand calculations in cm.
 #'
 #' @returns
 #' @export
 #'
 #' @examples
-standrecon <- function(data = data,
-                       measYear,
-                       refYear,
-                       avgIncVec,
-                       plotSize,
-                       nPlots = 1,
-                       barkEqList = list(),
-                       speciesCol = "Species",
-                       ageCol = "Age",
-                       dbhCol = "DBH",
-                       statusCol = "Status",
-                       decayCol = "Decay",
+standrecon <- function(data,
+                       meas_year,
+                       ref_year,
+                       avg_inc_vec,
+                       plot_size,
+                       n_plots = 1,
+                       bark_eq_list = list(),
+                       species_col = "Species",
+                       age_col = "Age",
+                       dbh_col = "DBH",
+                       status_col = "Status",
+                       decay_col = "Decay",
                        percentiles = c(0.25, 0.5, 0.75),
-                       minDbh = 5){
+                       min_dbh = 5){
 
   # Step 0: Prefunction helpers/definitions
 
   # (a) Pull out column names as strings
-  Species <- speciesCol
-  Age     <- ageCol
-  DBH     <- dbhCol
-  Status  <- statusCol
-  Decay   <- decayCol
+  Species <- species_col
+  Age     <- age_col
+  DBH     <- dbh_col
+  Status  <- status_col
+  Decay   <- decay_col
 
   # (b) create column names for each percent
   percentnames <- paste0("p", percentiles*100)
@@ -62,7 +62,7 @@ standrecon <- function(data = data,
   )
 
   # (d) update bark equation list based on user inputs
-  barkEqList <- utils::modifyList(defaultBarkEq, barkEqList)
+  bark_eq_list <- utils::modifyList(defaultBarkEq, bark_eq_list)
 
   # (e) setup final dataframe
   finalOutput <- list()
@@ -79,39 +79,39 @@ standrecon <- function(data = data,
 
   # (a) Run linear regression to find missing ages of live trees (func)
 
-  allTreeData <- liveTreeAge(data = data,
-                             speciesCol = speciesCol,
-                             ageCol = ageCol,
-                             dbhCol = dbhCol,
-                             statusCol = statusCol,
-                             measYear = measYear)
+  allTreeData <- .predict_live_tree_age(data = data,
+                             species_col = species_col,
+                             age_col = age_col,
+                             dbh_col = dbh_col,
+                             status_col = status_col,
+                             meas_year = meas_year)
 
   # (b) Filter trees that are alive at reference date
 
-  for (rY in refYear) {
+  for (rY in ref_year) {
 
     # subset dataframe for only live tree calculations
     liveTreeData <- allTreeData[allTreeData[[Status]] == 1, ]
 
     # filter trees alive at reference and make sure they have required columns
-    liveTreeData <- liveTreeData[liveTreeData$estabYear <= rY & stats::complete.cases(liveTreeData[, c(DBH, Status, Species)]), ]
+    liveTreeData <- liveTreeData[liveTreeData$estab_year <= rY & stats::complete.cases(liveTreeData[, c(DBH, Status, Species)]), ]
 
 
     # (c) Subtract annual growth rate per species to find DBH
     # at reference date for all live trees
 
     # find growth to subtract (from diameter in mm/year)
-    growthToSub <- (avgIncVec*2)/10
+    growthToSub <- (avg_inc_vec*2)/10
     # create vector of matched growth to subtract by species to data
     spGrowthToSubLive <- growthToSub[liveTreeData[[Species]]]
     # calculate DBH at reference date
-    liveTreeData$RefDBH <- liveTreeData[[DBH]] - ((measYear - rY) * spGrowthToSubLive)
+    liveTreeData$RefDBH <- liveTreeData[[DBH]] - ((meas_year - rY) * spGrowthToSubLive)
 
 
     # (d) Remove trees below minimum DBH threshold
 
     # filter live trees to those above minimum DBH threshold (cm)
-    liveTreeData <- liveTreeData[liveTreeData$RefDBH >= minDbh, ]
+    liveTreeData <- liveTreeData[liveTreeData$RefDBH >= min_dbh, ]
 
 
 
@@ -128,7 +128,7 @@ standrecon <- function(data = data,
     # (a) Assign conclasses to dead trees (func)
 
     # apply conclasses to allTreeData
-    allTreeData$Conclass <- createConclass(allTreeData[[Status]], allTreeData[[Decay]])
+    allTreeData$Conclass <- .create_conclass(allTreeData[[Status]], allTreeData[[Decay]])
     # subset allTreeData for only dead trees with conclasses
     deadTreeData <- allTreeData[!is.na(allTreeData$Conclass), ]
 
@@ -162,7 +162,7 @@ standrecon <- function(data = data,
 
     # create reference table
     decompreference <- expand.grid(Species = names(avgDBHcm),
-                                   Conclass = 3:7)
+                                   Conclass = 3:8)
     decompreference$Rate <- NA_real_
     # fill decomposition rates by conclass
     decompreference$Rate[decompreference$Conclass == 3] <- 0
@@ -170,6 +170,7 @@ standrecon <- function(data = data,
     decompreference$Rate[decompreference$Conclass == 5] <- 0.15
     decompreference$Rate[decompreference$Conclass == 6] <- snagFall
     decompreference$Rate[decompreference$Conclass == 7] <- snagFall
+    decompreference$Rate[decompreference$Conclass == 8] <- snagFall
     # create empty columns for each percentile
     for (n in percentnames){
       decompreference[[as.character(n)]] <- NA
@@ -207,7 +208,7 @@ standrecon <- function(data = data,
         conclass4up <- which(decompSubDF$Conclass >= 4)
         # apply Fule's equation and cumulatively sum them per each conclass
         if (length(conclass4up) > 0){
-          yearsDead[conclass4up] <- cumsum(fuleDecomp(decompSubDF$Rate[conclass4up], p))
+          yearsDead[conclass4up] <- cumsum(.fule_decomp(decompSubDF$Rate[conclass4up], p))
         }
 
         # write back into decompreference for each percentile
@@ -244,7 +245,7 @@ standrecon <- function(data = data,
 
       # (a) Determine age of dead trees at reference date
       # find year of death for dead trees by adding measured year and years dead
-      deadTreeData[[deathCol]] <- ceiling(measYear + deadTreeData[[n]])
+      deadTreeData[[deathCol]] <- ceiling(meas_year + deadTreeData[[n]])
 
 
       # (b) Subtract annual growth rate per species to find DBH
@@ -257,7 +258,7 @@ standrecon <- function(data = data,
 
 
       # (c) Remove trees below minimum DBH threshold
-      deadTreeData <- deadTreeData[deadTreeData[[pRefDBH]] > minDbh, ]
+      deadTreeData <- deadTreeData[deadTreeData[[pRefDBH]] > min_dbh, ]
 
 
 
@@ -278,9 +279,9 @@ standrecon <- function(data = data,
         spConclass57 <- conclass57 & deadTreeData[[Species]] == sp
 
         # apply bark corrections if species name is in lookup table
-        if (sp %in% names(barkEqList)) {
+        if (sp %in% names(bark_eq_list)) {
           # apply bark correction if in table
-          deadTreeData$RefDBH[spConclass57] <- barkEqList[[sp]](deadTreeData[[pRefDBH]][spConclass57])
+          deadTreeData$RefDBH[spConclass57] <- bark_eq_list[[sp]](deadTreeData[[pRefDBH]][spConclass57])
         } else {
           # no changes to DBH otherwise
           deadTreeData$RefDBH[spConclass57] <- deadTreeData[[pRefDBH]][spConclass57]
@@ -305,7 +306,7 @@ standrecon <- function(data = data,
 
       # (b) Calculate basal area for reference date
       # basal area per tree
-      finalTreeData$BA <- (0.00007854 * (finalTreeData$RefDBH^2)) * (10000/(plotSize*nPlots))
+      finalTreeData$BA <- (0.00007854 * (finalTreeData$RefDBH^2)) * (10000/(plot_size*n_plots))
       # sum basal area per species
       BAsum <- rowsum(finalTreeData$BA, finalTreeData[[Species]], na.rm = T)
       # create output list of BA
@@ -315,14 +316,14 @@ standrecon <- function(data = data,
       # extract number of trees per species
       spCounts <- table(finalTreeData[[Species]])
       # create output list of tree density
-      DensList <- stats::setNames(as.list(as.numeric(spCounts) * (10000/(plotSize*nPlots))),
+      DensList <- stats::setNames(as.list(as.numeric(spCounts) * (10000/(plot_size*n_plots))),
                            paste0(names(spCounts), ".density"))
 
 
       # (d) Return stand density and basal area by species per percentile and reference year
       # and append to final data
       rowOut <- data.frame(
-        refYear = rY,
+        ref_year = rY,
         BAlist,
         DensList,
         check.names = FALSE
@@ -349,7 +350,7 @@ standrecon <- function(data = data,
 
   # (b) Calculate basal area
   # basal area per tree
-  measTreeData$BA <- (0.00007854 * (measTreeData[[DBH]]^2)) * (10000/(plotSize*nPlots))
+  measTreeData$BA <- (0.00007854 * (measTreeData[[DBH]]^2)) * (10000/(plot_size*n_plots))
   # sum basal area per species
   measBAsum <- rowsum(measTreeData$BA, measTreeData[[Species]], na.rm = T)
   # create output list of BA
@@ -359,14 +360,14 @@ standrecon <- function(data = data,
   # extract number of trees per species
   measSpCounts <- table(measTreeData[[Species]])
   # create output list of tree density
-  measDensList <- stats::setNames(as.list(as.numeric(measSpCounts) * (10000/(plotSize*nPlots))),
+  measDensList <- stats::setNames(as.list(as.numeric(measSpCounts) * (10000/(plot_size*n_plots))),
                            paste0(names(measSpCounts), ".density"))
 
 
   # (d) Return stand density and basal area by species per percentile and reference year
   # and append to final data
   measRowOut <- data.frame(
-    refYear = measYear,
+    ref_year = meas_year,
     measBAlist,
     measDensList,
     check.names = FALSE

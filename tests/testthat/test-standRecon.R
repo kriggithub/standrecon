@@ -7,7 +7,7 @@ test_that("standrecon() works on standrecon_example_data and returns a data fram
     meas_year = 2025,
     ref_year = c(1950, 1975),
     avg_inc_vec = c(PIEN = 0.5, ABBI = 0.3, PIPO = 0.4),
-    plot_size = 400
+    plot_size = 1000
   )
 
 

@@ -1,9 +1,9 @@
 Package: standrecon
-Title: Reconstruct Forest Stand Conditions
-Version: 0.0.0.9000
+Title: Reconstruct Historical Forest Stand Conditions
+Version: 0.1.0
 Authors@R: 
-    person("Kurt", "Riggin", , "krigscholar@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0009-0004-4700-1251"))
-Description: Function to reconstruct forest stand conditions at a given reference year.
+    person("Kurt", "Riggin", , "krigscholar@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0009-0004-4700-1251"))
+Description: Reconstructs forest stand basal area and stem density at user-specified reference years using tree-level inventory data. The method estimates missing tree ages, back-calculates diameters using species-specific growth rates, and incorporates decay-class-based decomposition to infer mortality timing for dead trees. Outputs are returned in a tidy long format suitable for analysis and visualization.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

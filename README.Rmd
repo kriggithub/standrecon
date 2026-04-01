@@ -69,6 +69,6 @@ out <- standrecon(
   plot_size = 1000
 )
 
-# View the first few rows of output
+# View the first few rows of output (percentiles for sensitivity analysis)
 head(out)
 

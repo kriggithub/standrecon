@@ -65,7 +65,7 @@ out <- standrecon(
   plot_size = 1000
 )
 
-# View the first few rows of output
+# View the first few rows of output (percentiles for sensitivity analysis)
 head(out)
 #>            type year percentile species basal_area stem_density
 #> 1 reconstructed 1950       0.25    ABBI   26.92181          530

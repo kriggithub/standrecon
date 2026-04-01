@@ -29,18 +29,21 @@ Data sets using standard species codes (such as PIPO or PSME) can use built-in b
 
 ## Installation
 
-You can install the development version of standrecon from [GitHub](https://github.com/) with:
+You can install standrecon from CRAN with
+
+``` r
+install.packages("standrecon")
+```
+
+
+Alternatively, can install the development version of standrecon from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
 pak::pak("kriggithub/standrecon")
 ```
 
-Or, you can download it from CRAN with
 
-``` r
-install.packages("standrecon")
-```
 
 
 ## Example

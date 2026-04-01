@@ -23,18 +23,18 @@ other species.
 
 ## Installation
 
-You can install the development version of standrecon from
+You can install standrecon from CRAN with
+
+``` r
+install.packages("standrecon")
+```
+
+Alternatively, can install the development version of standrecon from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
 pak::pak("kriggithub/standrecon")
-```
-
-Or, you can download it from CRAN with
-
-``` r
-install.packages("standrecon")
 ```
 
 ## Example

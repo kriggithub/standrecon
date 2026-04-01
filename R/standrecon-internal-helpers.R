@@ -87,7 +87,7 @@
   }
 
   # Round ages up to next whole number
-  data[[Age]] <- ceiling(as.numeric(data[[Age]]))
+  data[[Age]] <- round(as.numeric(data[[Age]]))
 
   # Create new column for established year
   data$estab_year <- meas_year - data[[Age]]

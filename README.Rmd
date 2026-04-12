@@ -58,9 +58,9 @@ data(standrecon_example_data)
 
 # Species-specific average radial growth (mm/year)
 avg_inc <- c(
-  PIEN = 0.5,
-  ABBI = 0.3,
-  PIPO = 0.4
+  PIEN = 1.5,
+  ABBI = 1.3,
+  PIPO = 1.4
 )
 
 # Reconstruct stand conditions

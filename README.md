@@ -51,9 +51,9 @@ data(standrecon_example_data)
 
 # Species-specific average radial growth (mm/year)
 avg_inc <- c(
-  PIEN = 0.5,
-  ABBI = 0.3,
-  PIPO = 0.4
+  PIEN = 1.5,
+  ABBI = 1.3,
+  PIPO = 1.4
 )
 
 # Reconstruct stand conditions
@@ -68,10 +68,10 @@ out <- standrecon(
 # View the first few rows of output (percentiles for sensitivity analysis)
 head(out)
 #>            type year percentile species basal_area stem_density
-#> 1 reconstructed 1950       0.25    ABBI   26.92181          530
-#> 2 reconstructed 1950       0.25    PIEN   30.76367          730
-#> 3 reconstructed 1950       0.25    PIPO   18.15475          310
-#> 4 reconstructed 1950       0.50    ABBI   26.26240          520
-#> 5 reconstructed 1950       0.50    PIEN   29.70578          730
-#> 6 reconstructed 1950       0.50    PIPO   17.41799          310
+#> 1 reconstructed 1950       0.25    ABBI   9.266339          400
+#> 2 reconstructed 1950       0.25    PIEN   9.692050          430
+#> 3 reconstructed 1950       0.25    PIPO   7.605282          250
+#> 4 reconstructed 1950       0.50    ABBI   7.151095          370
+#> 5 reconstructed 1950       0.50    PIEN   7.287843          410
+#> 6 reconstructed 1950       0.50    PIPO   5.500327          240
 ```

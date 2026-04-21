@@ -129,19 +129,13 @@ plot_standrecon <- function(out,
 
 data(standrecon_example_data)
 
-# Species-specific average radial growth (mm/year)
-avg_inc <- c(
-  PIEN = 1.5,
-  ABBI = 1.3,
-  PIPO = 1.4
-)
 
 # Reconstruct stand conditions
 out <- standrecon(
   data = standrecon_example_data,
   meas_year = 2025,
   ref_year = c(1940, 1910),
-  avg_inc_vec = avg_inc,
+  avg_inc_vec = c(PIEN = 1.5, ABBI = 1.3, PIPO = 1.4),
   plot_size = 1000
 )
 
@@ -171,7 +165,12 @@ plot_standrecon(
 )
 
 
-
+plot_standrecon(
+  out = out,
+  years = 1940,
+  percentiles = 0.5,
+  density_ba = "basal_area"
+)
 
 
 
